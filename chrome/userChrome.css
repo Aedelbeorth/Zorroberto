@@ -1,0 +1,661 @@
+/* ================================================================
+   USERCHROME.CSS — CONFIGURACIÓN UNIFICADA
+   ----------------------------------------------------------------
+   1) Barra superior en una sola línea (base: Bali10050/FirefoxCSS)
+   2) Barra lateral auto-ocultable con iconos (base: fx-autoconfig)
+   3) Parches para el Firefox moderno (sidebar revamp)
+
+   NOTA: la zona de detección invisible de 15 px del borde izquierdo
+   se crea en sidebar.uc.js, no en este archivo.
+   ================================================================ */
+
+
+/* ================================================================
+   SECCIÓN 1: VARIABLES GLOBALES
+   ================================================================ */
+:root {
+  /* --- Barra de una sola línea --- */
+  --tab-border-radius: 15px !important;  /* Redondeo de las pestañas            */
+  --NavbarWidth: 46;                     /* % de ancho de la navbar (36-43)     */
+  --TabsHeight: 25;                      /* Altura de las pestañas              */
+  --TabsBorder: 8;                       /* Borde de pestañas (layout grande)   */
+  --NavbarHeightSmall: calc(var(--TabsHeight) + var(--TabsBorder)); /* Layout pequeño */
+
+  /* --- Barra lateral --- */
+  --wide-sidebar-width: 300px;           /* Ancho de la barra expandida         */
+  --arrowpanel-menuitem-padding: 2px;
+}
+
+
+/* ================================================================
+   SECCIÓN 2: MEDIA QUERIES — BARRA EN UNA SOLA LÍNEA
+   ================================================================ */
+
+/* Ventana ancha (>1325 px): solo crece el espacio de pestañas */
+@media screen and (min-width: 1325px) {
+  :root #nav-bar {
+    margin-top: calc(var(--TabsHeight) * -1px - var(--TabsBorder) * 1px) !important;
+    height: calc(var(--TabsHeight) * 1px + var(--TabsBorder) * 1px);
+  }
+  #TabsToolbar {
+    margin-left: var(--NavbarContentWidth, calc(1325px / 100 * var(--NavbarWidth))) !important;
+  }
+  #nav-bar {
+    margin-right: calc(100vw - var(--NavbarContentWidth, calc(1325px / 100 * var(--NavbarWidth)))) !important;
+  }
+  #urlbar-container { min-width: 0px !important; flex: auto !important; }
+  toolbarspring { display: none !important; }
+}
+
+/* Ventana media (950-1324 px): crecen pestañas y navbar */
+@media screen and (min-width: 950px) and (max-width: 1324px) {
+  :root #nav-bar {
+    margin-top: calc(var(--TabsHeight) * -1px - var(--TabsBorder) * 1px) !important;
+    height: calc(var(--TabsHeight) * 1px + var(--TabsBorder) * 1px);
+  }
+  #TabsToolbar { margin-left: var(--NavbarContentWidth, calc(var(--NavbarWidth) * 1vw)) !important; }
+  #nav-bar {
+    margin-right: calc(100vw - var(--NavbarContentWidth, calc(var(--NavbarWidth) * 1vw))) !important;
+  }
+  #urlbar-container { min-width: 0px !important; flex: auto !important; }
+  toolbarspring { display: none !important; }
+  #TabsToolbar, #nav-bar { transition: margin-top .25s !important; }
+}
+
+/* Ventana estrecha (<949 px): vuelve al layout de dos líneas */
+@media screen and (max-width: 949px) {
+  :root #nav-bar {
+    padding: 0 5px 0 5px !important;
+    height: calc(var(--NavbarHeightSmall) * 1px) !important;
+  }
+  toolbarspring { display: none !important; }
+  #TabsToolbar, #nav-bar { transition: margin-top .25s !important; }
+}
+
+/* Fondos transparentes para navbar y barra de marcadores */
+#nav-bar, #PersonalToolbar {
+  background-color: #0000 !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+#nav-bar { margin-left: 3px; }
+
+/* Altura de pestaña coherente con las variables */
+.tab-background, .tab-stack {
+  min-height: calc(var(--TabsHeight) * 1px) !important;
+}
+
+/* La pestaña activa se diferencia sin alterar el diseño compacto. */
+#tabbrowser-tabs .tabbrowser-tab[selected] .tab-background {
+  box-sizing: border-box !important;
+  border: 1px solid #0a84ff !important;
+}
+
+#tabbrowser-tabs .tabbrowser-tab[selected] .tab-label {
+  font-weight: 600 !important;
+}
+
+#tabbrowser-tabs .tabbrowser-tab:not([selected]) .tab-label,
+#tabbrowser-tabs .tabbrowser-tab:not([selected]) .tab-icon-image {
+  opacity: .62 !important;
+}
+
+
+/* ================================================================
+   SECCIÓN 3: BOTONES DE LA BARRA DE HERRAMIENTAS
+   ================================================================ */
+
+/* Botón de menú (hamburguesa) */
+#PanelUI-button {
+  -moz-box-ordinal-group: 0 !important;
+  order: -2 !important;
+  margin: 2px !important;
+  display: flex !important;
+}
+
+/* Botones de ventana (minimizar, maximizar, cerrar) */
+.titlebar-buttonbox-container {
+  display: flex !important;
+  margin-right: 12px !important;
+}
+
+/* Atrás / Adelante — MODIFICADO: visibles (el tema original los oculta) */
+#back-button,
+#forward-button {
+  display: flex !important;
+  visibility: visible !important;
+  margin: 0 2px !important;
+}
+
+#back-button .toolbarbutton-icon,
+#forward-button .toolbarbutton-icon {
+  width: 24px !important;
+  height: 24px !important;
+  padding: 4px !important;
+}
+
+/* Quitar el círculo grande que Firefox pone alrededor del botón Atrás */
+#back-button { padding: 0 !important; }
+
+#back-button image,
+#forward-button image {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Botón de extensiones */
+#unified-extensions-button {
+  order: -3 !important;
+  display: flex !important;
+}
+
+/* Ocultar el nombre de extensión dentro de la URL */
+#identity-box.extensionPage #identity-icon-label {
+  visibility: collapse !important;
+}
+
+/* Botón "mostrar todas las pestañas" (flecha) */
+#alltabs-button { display: none !important; }
+
+/* Eliminar controles de ventana duplicados dentro de la navbar */
+#nav-bar .titlebar-buttonbox { display: none !important; }
+
+/* ================================================================
+   SECCION 4: BARRA DE DIRECCIONES (URL BAR) - CAJA FLOTANTE
+   DEBAJO DE LAS PESTANAS
+   ================================================================ */
+
+#urlbar-container {
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+  opacity: 0 !important;
+  overflow: visible !important;
+}
+
+#urlbar-tab-float-wrapper {
+  --uc-urlbar-bg: #f7f7f7;
+  --uc-urlbar-fg: #1f2328;
+  --uc-urlbar-border: rgba(0, 0, 0, .22);
+  position: fixed !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  box-sizing: border-box !important;
+  padding: 28px 60px !important;
+  color: #f5f7fb !important;
+  border: 1px solid rgba(255, 255, 255, .24) !important;
+  border-radius: 16px !important;
+  background: #202428 !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, .38) !important;
+  backdrop-filter: none !important;
+  z-index: 10001 !important;
+  pointer-events: auto !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transition: opacity 120ms ease, visibility 120ms ease !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  #urlbar-tab-float-wrapper {
+    --uc-urlbar-bg: #202428;
+    --uc-urlbar-fg: #f5f7fb;
+    --uc-urlbar-border: rgba(255, 255, 255, .22);
+    background: #202428 !important;
+  }
+}
+
+#urlbar-tab-float-wrapper.urlbar-floating-active {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+#urlbar-tab-float-wrapper #urlbar-container {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  background: transparent !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+#urlbar-tab-float-wrapper #urlbar,
+#urlbar-tab-float-wrapper #urlbar-background,
+#urlbar-tab-float-wrapper #urlbar-input-container,
+#urlbar-tab-float-wrapper #urlbar .urlbar-input-container,
+#urlbar-tab-float-wrapper #urlbar .urlbar-input-box,
+#urlbar-tab-float-wrapper #urlbar .urlbar-textbox-container,
+#urlbar-tab-float-wrapper #urlbar-input,
+#urlbar-tab-float-wrapper #urlbar-input::placeholder {
+  position: relative !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  height: 32px !important;
+  border-radius: 10px !important;
+  background: transparent !important;
+  color: inherit !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  opacity: 1 !important;
+}
+
+#urlbar-tab-float-wrapper #urlbar,
+#urlbar-tab-float-wrapper #urlbar-background,
+#urlbar-tab-float-wrapper #urlbar-input-container,
+#urlbar-tab-float-wrapper #urlbar-input-box,
+#urlbar-tab-float-wrapper #urlbar-input {
+  opacity: 1 !important;
+  visibility: visible !important;
+  background-color: var(--uc-urlbar-bg) !important;
+}
+
+#urlbar-tab-float-wrapper #urlbar-background {
+  background-image: none !important;
+}
+
+#urlbar-tab-float-wrapper #urlbar-container,
+#urlbar-tab-float-wrapper #urlbar,
+#urlbar-tab-float-wrapper #urlbar-background,
+#urlbar-tab-float-wrapper #urlbar-input-container,
+#urlbar-tab-float-wrapper #urlbar-input-box,
+#urlbar-tab-float-wrapper #urlbar-input,
+#urlbar-tab-float-wrapper #urlbar-bookmark-proxy,
+#urlbar-tab-float-wrapper #search-one-offs-container {
+  background-color: var(--uc-urlbar-bg) !important;
+  background-image: none !important;
+  opacity: 1 !important;
+}
+
+#urlbar-tab-float-wrapper #urlbar-input,
+#urlbar-tab-float-wrapper #urlbar-input::placeholder,
+#urlbar-tab-float-wrapper #urlbar .urlbar-input-box {
+  background: transparent !important;
+  color: var(--uc-urlbar-fg) !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  caret-color: var(--uc-urlbar-fg) !important;
+}
+
+#urlbar-tab-float-wrapper #urlbar-input {
+  display: block !important;
+  flex: 1 1 auto !important;
+  box-sizing: border-box !important;
+  height: 32px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  padding-right: 6px !important;
+  padding-left: 8px !important;
+  -moz-appearance: none !important;
+}
+
+#urlbar-bookmark-proxy {
+  position: absolute !important;
+  top: 50% !important;
+  right: 8px !important;
+  transform: translateY(-50%) !important;
+  width: 28px !important;
+  height: 28px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 8px !important;
+  background: transparent !important;
+  color: var(--toolbar-field-icon-fill, currentColor) !important;
+  font-size: 20px !important;
+  line-height: 28px !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: background-color 120ms ease, color 120ms ease !important;
+}
+
+#urlbar-bookmark-proxy:hover {
+  background: var(--toolbarbutton-hover-background, rgba(0, 0, 0, .10)) !important;
+  color: inherit !important;
+}
+
+#urlbar-bookmark-proxy.bookmarked {
+  color: #0a84ff !important;
+}
+
+#urlbar-tab-float-wrapper .search-one-offs {
+  background: transparent !important;
+}
+
+#urlbar-tab-float-wrapper .searchbar-engine,
+#urlbar-tab-float-wrapper .urlbar-engine-one-off-item {
+  color: inherit !important;
+  border-radius: 8px !important;
+}
+
+#urlbar-tab-float-wrapper #search-one-offs-container {
+  background: var(--uc-urlbar-bg) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  border-radius: 10px !important;
+  border: 1px solid var(--toolbar-field-focus-border-color, var(--toolbar-field-border-color, rgba(0, 0, 0, .18))) !important;
+}
+
+/* Panel propio alimentado por los resultados del autocompletado nativo. */
+#urlbar-tab-float-suggestions {
+  position: absolute !important;
+  top: calc(100% + 8px) !important;
+  left: 0 !important;
+  width: 100% !important;
+  max-height: min(420px, 60vh) !important;
+  box-sizing: border-box !important;
+  padding: 6px !important;
+  border: 1px solid var(--uc-urlbar-border) !important;
+  border-radius: 12px !important;
+  background: #ffffff !important;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .24) !important;
+  backdrop-filter: blur(18px) !important;
+  color: var(--uc-urlbar-fg) !important;
+  z-index: 10002 !important;
+}
+
+#urlbar-tab-float-wrapper.urlbar-floating-active #urlbar-tab-float-suggestions:not([hidden]) {
+  display: block !important;
+}
+
+#urlbar-tab-float-suggestion,
+.urlbar-tab-float-suggestion {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  min-height: 34px !important;
+  padding: 7px 10px !important;
+  border-radius: 8px !important;
+  color: var(--uc-urlbar-fg) !important;
+  cursor: pointer !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  #urlbar-tab-float-suggestions {
+    background: #202428 !important;
+    border-color: rgba(255, 255, 255, .18) !important;
+    color: #f5f7fb !important;
+  }
+
+  .urlbar-tab-float-suggestion,
+  .urlbar-tab-float-suggestion-label {
+    color: #f5f7fb !important;
+  }
+
+  .urlbar-tab-float-suggestion-detail {
+    color: rgba(245, 247, 251, .62) !important;
+  }
+}
+
+.urlbar-tab-float-suggestion:hover {
+  background: var(--toolbarbutton-hover-background, rgba(128, 128, 128, .18)) !important;
+}
+
+.urlbar-tab-float-suggestion-label {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.urlbar-tab-float-suggestion-detail {
+  flex: 0 1 45% !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  color: color-mix(in srgb, var(--uc-urlbar-fg) 62%, transparent) !important;
+  font-size: .9em !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+/* Acabado del panel al estilo de la barra flotante de referencia. */
+#urlbar-tab-float-wrapper #urlbar-container {
+  height: 40px !important;
+  background: transparent !important;
+}
+
+#urlbar-tab-float-wrapper #urlbar,
+#urlbar-tab-float-wrapper #urlbar-background,
+#urlbar-tab-float-wrapper #urlbar-input-container {
+  background: #ffffff !important;
+  border-radius: 8px !important;
+  opacity: 1 !important;
+}
+
+#urlbar-tab-float-wrapper #urlbar-input {
+  height: 38px !important;
+  color: #202124 !important;
+  background: transparent !important;
+}
+
+#urlbar-tab-float-wrapper #urlbar-bookmark-proxy {
+  top: 34px !important;
+  right: 68px !important;
+  transform: none !important;
+  background: #ffffff !important;
+  color: #202124 !important;
+}
+
+#urlbar-searchmode-arrow-proxy {
+  position: absolute !important;
+  top: 39px !important;
+  left: 98px !important;
+  z-index: 10004 !important;
+  display: block !important;
+  width: 16px !important;
+  height: 18px !important;
+  color: #5f6368 !important;
+  font: 16px/18px sans-serif !important;
+  text-align: center !important;
+  pointer-events: none !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  #urlbar-searchmode-arrow-proxy {
+    color: #5f6368 !important;
+  }
+}
+
+#urlbar-tab-float-wrapper #urlbar-searchmode-switcher,
+#urlbar-tab-float-wrapper .urlbar-searchmode-switcher,
+#urlbar-tab-float-wrapper #searchmode-switcher-dropmarker,
+#urlbar-tab-float-wrapper #urlbar-searchmode-switcher > image {
+  display: -moz-box !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  color: #202124 !important;
+  fill: #202124 !important;
+}
+
+#urlbar-tab-float-suggestions {
+  top: 84px !important;
+  width: 100% !important;
+  background: #ffffff !important;
+  border-radius: 0 0 8px 8px !important;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, .22) !important;
+}
+
+
+/* ================================================================
+   SECCIÓN 5: VENTANA Y VARIOS
+   ================================================================ */
+
+/* Quitar borde molesto bajo la barra */
+#navigator-toolbox { border: none !important; }
+
+/* Atenuar la ventana cuando no tiene el foco */
+#navigator-toolbox-background:-moz-window-inactive { filter: contrast(90%); }
+
+/* Aviso de pantalla completa sin borde */
+#fullscreen-warning {
+  border: none !important;
+  background: -moz-Dialog !important;
+}
+
+
+/* ================================================================
+   SECCIÓN 6: BOTÓN DE CERRAR PESTAÑA
+   ================================================================ */
+.tabbrowser-tab:not(:hover) .tab-close-button {
+  opacity: 0% !important;
+  transition: 0.3s !important;
+  display: -moz-box !important;
+}
+.tab-close-button[selected]:not(:hover) {
+  opacity: 45% !important;
+  transition: 0.3s !important;
+  display: -moz-box !important;
+}
+.tabbrowser-tab:hover .tab-close-button {
+  opacity: 50%;
+  transition: 0.3s !important;
+  background: none !important;
+  cursor: pointer;
+  display: -moz-box !important;
+}
+.tab-close-button:hover,
+.tab-close-button[selected]:hover {
+  opacity: 100% !important;
+  transition: 0.3s !important;
+  background: none !important;
+  cursor: pointer;
+  display: -moz-box !important;
+}
+
+
+/* ================================================================
+   SECCIÓN 7: BARRA LATERAL AUTO-OCULTABLE
+   Marcadores · Historial · Pestañas sincronizadas
+   ================================================================ */
+
+/* --- 7.1 Ocultar el lanzador nuevo de Firefox (sidebar revamp) ---
+   Elimina la franja clara con el engranaje del borde izquierdo */
+sidebar-main,
+#sidebar-launcher-splitter {
+  display: none !important;
+}
+
+/* --- 7.2 Barra contraída: fuera de pantalla y 100 % invisible --- */
+#sidebar-box {
+  position: fixed !important;
+  left: calc((var(--wide-sidebar-width) + 100px) * -1) !important;
+  top: calc(var(--TabsHeight) * 1px + var(--TabsBorder) * 1px) !important;
+  bottom: 0 !important;
+  width: var(--wide-sidebar-width) !important;
+  min-width: var(--wide-sidebar-width) !important;
+  max-width: var(--wide-sidebar-width) !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+  z-index: 9999 !important;
+  transition: left 300ms ease, opacity 250ms ease,
+              visibility 0s linear 300ms !important;
+}
+
+/* Imprescindible: con el atributo hidden, Firefox aplica display:none
+   y el mecanismo de hover no podría dibujar la barra */
+#sidebar-box[hidden] {
+  display: flex !important;
+}
+
+/* --- 7.3 Barra expandida (hover o clase forzada por el script) --- */
+#sidebar-box:hover,
+#sidebar-box.sidebar-force-open {
+  left: 0 !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3) !important;
+  z-index: 10000 !important;
+  transition: left 300ms ease, opacity 150ms ease !important;
+}
+
+/* --- 7.4 Cabecera personalizada --- */
+#sidebar-switcher-target,
+#sidebar-title {
+  display: none !important;
+}
+
+#sidebar-header {
+  padding: 4px 6px !important;
+  min-height: 36px !important;
+  max-height: 36px !important;
+  background-color: var(--toolbar-bgcolor, #2b2a33) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+/* Evitar el separador de redimensionado */
+#sidebar-splitter { display: none !important; }
+
+/* --- 7.5 Iconos personalizados --- */
+.sidebar-custom-icon {
+  width: 28px !important;
+  height: 28px !important;
+  padding: 6px !important;
+  margin: 0 2px !important;
+  border-radius: 6px !important;
+  border: none !important;
+  background: transparent !important;
+  cursor: pointer !important;
+  transition: all 150ms ease !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+}
+
+.sidebar-custom-icon:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.sidebar-custom-icon.sidebar-icon-active {
+  background-color: rgba(85, 250, 255, 0.15) !important;
+  box-shadow: inset 0 -2px 0 #55FAFF !important;
+}
+
+.sidebar-custom-icon::before {
+  content: "" !important;
+  display: block !important;
+  width: 16px !important;
+  height: 16px !important;
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  opacity: 0.7 !important;
+  transition: opacity 150ms ease !important;
+}
+
+.sidebar-custom-icon:hover::before,
+.sidebar-custom-icon.sidebar-icon-active::before {
+  opacity: 1 !important;
+}
+
+/* Icono: Marcadores */
+#sidebar-btn-bookmarks::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23fbfbfe' viewBox='0 0 16 16'%3E%3Cpath d='M3 1h10a1 1 0 0 1 1 1v13l-6-3-6 3V2a1 1 0 0 1 1-1z'/%3E%3C/svg%3E") !important;
+}
+
+/* Icono: Historial */
+#sidebar-btn-history::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23fbfbfe' viewBox='0 0 16 16'%3E%3Cpath d='M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm.5 4v4.25l3.5 2.08-.75 1.23L7 8.5V4h1.5z'/%3E%3C/svg%3E") !important;
+}
+
+/* Icono: Descargas */
+#sidebar-btn-downloads::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23fbfbfe' viewBox='0 0 16 16'%3E%3Cpath d='M8 0a1 1 0 0 1 1 1v8.586l2.293-2.293a1 1 0 1 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 1 1 1.414-1.414L7 9.586V1a1 1 0 0 1 1-1zM2 14a1 1 0 0 1 1-1h10a1 1 0 1 1 0 2H3a1 1 0 0 1-1-1z'/%3E%3C/svg%3E") !important;
+}
+
+/* Icono: Pestañas sincronizadas */
+#sidebar-btn-sync::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23fbfbfe' viewBox='0 0 16 16'%3E%3Cpath d='M12.5 2.5A6.5 6.5 0 0 0 1.6 6H0l2.5 3L5 6H3.1A5 5 0 0 1 11.4 3.6L10 5h4V1l-1.5 1.5zM8 13a5 5 0 0 1-4.4-2.6L5 9H1v4l1.5-1.5A6.5 6.5 0 0 0 14.4 9H16l-2.5-3L11 9h1.9A5 5 0 0 1 8 13z'/%3E%3C/svg%3E") !important;
+}

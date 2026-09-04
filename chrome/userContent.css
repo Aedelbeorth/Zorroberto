@@ -1,0 +1,67 @@
+/* ================================================================
+USERCONTENT.CSS — TEMA CLARO EN PÁGINAS INTERNAS
+================================================================ */
+
+/* Pestaña nueva, inicio, navegación privada y perfiles */
+@-moz-document url(chrome://browser/content/blanktab.html),
+               url(about:newtab),
+               url(about:home),
+               url(about:privatebrowsing),
+               url(about:profiles) {
+  body {
+    background-color: #ffffff !important;
+    color: #1c1c1c !important;
+  }
+}
+
+/* Preferencias: fondo claro */
+@-moz-document url(about:preferences) {
+  body,
+  .sticky-container {
+    background-color: #ffffff !important;
+    color: #1c1c1c !important;
+  }
+}
+
+/* Complementos: rediseño compacto con tema CLARO */
+@-moz-document url(about:addons) {
+  body,
+  .sticky-container,
+  .main-search,
+  .main-heading {
+    background-color: #ffffff !important;
+    color: #1c1c1c !important;
+  }
+  
+  .addon.card {
+    max-width: 950px !important;
+    padding: 4px 6px 4px 11px !important;
+    margin: -1px !important;
+    margin-top: 4px !important;
+    font-size: 11px !important;
+    font-family: Arial !important;
+    border-radius: 16px !important;
+    background-color: #f4f4f4 !important;
+    color: #1c1c1c !important;
+    border: 1px solid #d4d4d4 !important;
+  }
+  
+  #header-inner {
+    margin-left: -133px !important;
+    margin-bottom: -27px !important;
+  }
+  
+  .heading-inner {
+    width: 1795px !important;
+    margin-left: -1185px !important;
+    margin-top: -28px !important;
+  }
+  
+  .toolbarbutton-icon {
+    padding: 0px 2px !important;
+    margin-left: -222px !important;
+    margin-right: 0px !important;
+    margin-top: -2px !important;
+    padding-top: 2px !important;
+  }
+}

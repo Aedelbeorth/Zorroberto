@@ -40,11 +40,11 @@ Este tema está inspirado en:
 
 🇬🇧 Zorroberto
 
-    How to install and manage themes in Firefox
-    Tip: How to Enable or Disable New Sidebar in Mozilla Firefox – AskVG
-    What Is The Bar Below The Address Bar Called at Terry Greene blog
+Zorroberto is a custom theme for Firefox that combines:
 
-sidebar**
+    A unified top bar
+    
+    An auto-hide bookmarks sidebar
 
     A floating URL box
 
